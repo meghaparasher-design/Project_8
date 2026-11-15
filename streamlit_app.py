@@ -1,91 +1,85 @@
 import logging
+import os
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import streamlit as st
+from huggingface_hub import hf_hub_download
+from sentence_transformers import SentenceTransformer
 
-from src.recommender import JobRecommender
+from src.recommender import normalize_text
 
+
+MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2"
+LOCAL_INDEX = Path(__file__).resolve().parent / "artifacts" / "minilm_index"
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("project8.recommender")
-
-ROOT = Path(__file__).resolve().parent
-CATALOG = ROOT / "data" / "processed" / "jobs_features.csv"
-
-DEMO_TITLES = [
-    "Python and SQL data analyst for sales reporting",
-    "Power BI dashboard developer",
-    "Machine learning engineer for document classification",
-    "WordPress developer for an ecommerce website",
-    "React frontend developer",
-    "Graphic designer for logo and brand identity",
-    "Video editor for YouTube tutorials",
-    "SEO specialist for ecommerce product pages",
-    "Virtual assistant for customer support",
-    "Bookkeeper with QuickBooks experience",
-]
-
-DISPLAY_COLUMNS = {
-    "title": "Job title",
-    "country": "Country as recorded",
-    "published_date": "Published date",
-    "similarity": "Title similarity",
-}
+logger = logging.getLogger("project8.search")
 
 
-@st.cache_resource
-def load_recommender(catalog_version):
-    if catalog_version is None:
-        jobs = pd.DataFrame({
-            "title": DEMO_TITLES,
-            "country": ["—"] * len(DEMO_TITLES),
-            "published_date": ["—"] * len(DEMO_TITLES),
-        })
-    else:
-        columns = {
-            "title",
-            "country",
-            "published_date",
-            "eligible_for_recommendation",
-        }
-        jobs = pd.read_csv(CATALOG, usecols=lambda name: name in columns)
+@st.cache_resource(show_spinner="Loading the MiniLM search index…")
+def load_search_index(dataset_repo, dataset_revision, model_revision):
+    def index_file(name):
+        if not dataset_repo:
+            return LOCAL_INDEX / name
 
-    engine = JobRecommender(jobs)
-    logger.info("Search index ready with %d titles", len(engine.catalog))
-    return engine
+        return hf_hub_download(
+            repo_id=dataset_repo,
+            repo_type="dataset",
+            revision=dataset_revision,
+            filename=name,
+            token=os.environ.get("HF_TOKEN"),
+        )
+
+    catalog = pd.read_csv(index_file("catalog.csv.gz"))
+    vectors = np.load(
+        index_file("title_vectors.npy"),
+        mmap_mode="r",
+        allow_pickle=False,
+    )
+    codes = catalog["vector_id"].to_numpy(dtype=np.intp)
+
+    if vectors.ndim != 2 or not len(codes) or codes.min() < 0 or codes.max() >= len(vectors):
+        raise ValueError("The catalog and vector files are invalid or mismatched.")
+
+    model = SentenceTransformer(MODEL_ID, revision=model_revision)
+    if vectors.shape[1] != model.get_sentence_embedding_dimension():
+        raise ValueError("The index does not match the model's embedding dimension.")
+
+    logger.info("Loaded MiniLM index with %d postings", len(catalog))
+    return catalog, vectors, codes, model
 
 
-st.set_page_config(page_title="Project 8 Job Recommender")
-st.title("Job Recommender")
-
-catalog_version = CATALOG.stat().st_mtime_ns if CATALOG.is_file() else None
-
-if catalog_version is None:
-    st.info("Synthetic demo catalog for testing the hosted app.")
-else:
-    st.caption("Historical Upwork postings. Current availability may differ.")
+st.title("Project 8 Job Recommender")
+st.caption("MiniLM semantic search over historical Upwork job postings.")
 
 with st.form("job_search"):
-    query = st.text_input(
-        "Job title or skills",
-        placeholder="Python SQL data analyst",
-    )
+    query = st.text_input("Job title or skills", placeholder="Python SQL data analyst")
     top_k = st.slider("Maximum results", 1, 20, 5)
     submitted = st.form_submit_button("Find jobs")
 
 if submitted:
-    try:
-        engine = load_recommender(catalog_version)
-        results = engine.search(query, top_k=top_k)
-    except ValueError as error:
-        st.warning(str(error))
+    query = normalize_text(query)
+    if len(query) < 2:
+        st.warning("Enter at least two characters.")
     else:
-        logger.info("Search completed with %d results", len(results))
-        if results.empty:
-            st.info("No titles matched. Try a different job title or skill.")
-        else:
-            st.dataframe(
-                results.rename(columns=DISPLAY_COLUMNS),
-                hide_index=True,
+        try:
+            catalog, vectors, codes, model = load_search_index(
+                st.secrets.get("HF_DATASET_REPO", ""),
+                st.secrets.get("HF_DATASET_REVISION", ""),
+                st.secrets["MINILM_REVISION"],
             )
+            query_vector = model.encode([query], normalize_embeddings=True)[0]
+            scores = (vectors @ query_vector)[codes]
+            positions = np.argsort(-scores, kind="stable")[:top_k]
+
+            results = catalog.iloc[positions][
+                ["title", "country", "published_date"]
+            ].copy()
+            results["similarity"] = scores[positions].round(4)
+            st.dataframe(results, hide_index=True)
+            logger.info("MiniLM search returned %d results", len(results))
+        except Exception:
+            logger.exception("MiniLM search failed")
+            st.error("Search is temporarily unavailable. Check the app logs for details.")
