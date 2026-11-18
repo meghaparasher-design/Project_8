@@ -1,0 +1,64 @@
+date,category,actual,forecast,absolute_error
+2024-03-17 00:00:00+00:00,Administrative and Customer Support,123,135,12
+2024-03-18 00:00:00+00:00,Administrative and Customer Support,211,238,27
+2024-03-19 00:00:00+00:00,Administrative and Customer Support,227,239,12
+2024-03-20 00:00:00+00:00,Administrative and Customer Support,223,210,13
+2024-03-21 00:00:00+00:00,Administrative and Customer Support,222,209,13
+2024-03-22 00:00:00+00:00,Administrative and Customer Support,170,209,39
+2024-03-23 00:00:00+00:00,Administrative and Customer Support,149,117,32
+2024-03-17 00:00:00+00:00,Data and AI,104,137,33
+2024-03-18 00:00:00+00:00,Data and AI,149,175,26
+2024-03-19 00:00:00+00:00,Data and AI,178,208,30
+2024-03-20 00:00:00+00:00,Data and AI,182,177,5
+2024-03-21 00:00:00+00:00,Data and AI,186,180,6
+2024-03-22 00:00:00+00:00,Data and AI,166,158,8
+2024-03-23 00:00:00+00:00,Data and AI,98,122,24
+2024-03-17 00:00:00+00:00,Design and Creative,506,538,32
+2024-03-18 00:00:00+00:00,Design and Creative,730,786,56
+2024-03-19 00:00:00+00:00,Design and Creative,796,841,45
+2024-03-20 00:00:00+00:00,Design and Creative,741,769,28
+2024-03-21 00:00:00+00:00,Design and Creative,740,741,1
+2024-03-22 00:00:00+00:00,Design and Creative,683,695,12
+2024-03-23 00:00:00+00:00,Design and Creative,525,523,2
+2024-03-17 00:00:00+00:00,Engineering and Architecture,28,33,5
+2024-03-18 00:00:00+00:00,Engineering and Architecture,37,56,19
+2024-03-19 00:00:00+00:00,Engineering and Architecture,40,57,17
+2024-03-20 00:00:00+00:00,Engineering and Architecture,51,63,12
+2024-03-21 00:00:00+00:00,Engineering and Architecture,48,43,5
+2024-03-22 00:00:00+00:00,Engineering and Architecture,45,37,8
+2024-03-23 00:00:00+00:00,Engineering and Architecture,28,26,2
+2024-03-17 00:00:00+00:00,Finance and Accounting,53,43,10
+2024-03-18 00:00:00+00:00,Finance and Accounting,97,94,3
+2024-03-19 00:00:00+00:00,Finance and Accounting,85,98,13
+2024-03-20 00:00:00+00:00,Finance and Accounting,79,91,12
+2024-03-21 00:00:00+00:00,Finance and Accounting,80,83,3
+2024-03-22 00:00:00+00:00,Finance and Accounting,81,89,8
+2024-03-23 00:00:00+00:00,Finance and Accounting,54,57,3
+2024-03-17 00:00:00+00:00,Legal Services,23,17,6
+2024-03-18 00:00:00+00:00,Legal Services,44,27,17
+2024-03-19 00:00:00+00:00,Legal Services,42,33,9
+2024-03-20 00:00:00+00:00,Legal Services,42,27,15
+2024-03-21 00:00:00+00:00,Legal Services,27,37,10
+2024-03-22 00:00:00+00:00,Legal Services,31,25,6
+2024-03-23 00:00:00+00:00,Legal Services,25,18,7
+2024-03-17 00:00:00+00:00,Marketing and Sales,525,582,57
+2024-03-18 00:00:00+00:00,Marketing and Sales,917,974,57
+2024-03-19 00:00:00+00:00,Marketing and Sales,905,889,16
+2024-03-20 00:00:00+00:00,Marketing and Sales,951,910,41
+2024-03-21 00:00:00+00:00,Marketing and Sales,912,895,17
+2024-03-22 00:00:00+00:00,Marketing and Sales,724,809,85
+2024-03-23 00:00:00+00:00,Marketing and Sales,650,564,86
+2024-03-17 00:00:00+00:00,Software and Web Development,616,582,34
+2024-03-18 00:00:00+00:00,Software and Web Development,893,851,42
+2024-03-19 00:00:00+00:00,Software and Web Development,892,896,4
+2024-03-20 00:00:00+00:00,Software and Web Development,910,928,18
+2024-03-21 00:00:00+00:00,Software and Web Development,905,930,25
+2024-03-22 00:00:00+00:00,Software and Web Development,841,826,15
+2024-03-23 00:00:00+00:00,Software and Web Development,574,648,74
+2024-03-17 00:00:00+00:00,Writing and Translation,178,218,40
+2024-03-18 00:00:00+00:00,Writing and Translation,305,343,38
+2024-03-19 00:00:00+00:00,Writing and Translation,337,365,28
+2024-03-20 00:00:00+00:00,Writing and Translation,324,366,42
+2024-03-21 00:00:00+00:00,Writing and Translation,350,355,5
+2024-03-22 00:00:00+00:00,Writing and Translation,276,325,49
+2024-03-23 00:00:00+00:00,Writing and Translation,178,199,21
