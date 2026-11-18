@@ -29,32 +29,31 @@ st.set_page_config(
 SIDEBAR_STYLE = """
 <style>
 [data-testid="stSidebar"] {
-    background: linear-gradient(165deg, #14244a 0%, #204467 58%, #115650 100%);
-    color: #f0fbff;
+    background: linear-gradient(165deg, #14244a, #204467 58%, #115650);
 }
 [data-testid="stSidebarNav"] a {
-    background: #ffffff10;
-    border: 1px solid #ffffff30;
+    background: #233f63;
+    border: 1px solid #58749a;
     border-radius: 10px;
-    color: #e5f5ff;
     margin-block: .2rem;
 }
-[data-testid="stSidebarNav"] a :is(span, p) {
-    color: inherit;
-    font-weight: 600;
+[data-testid="stSidebarNav"] a,
+[data-testid="stSidebarNav"] a :is(span, p),
+[data-testid="stSidebarHeader"] button {
+    color: #f0fbff !important;
 }
 [data-testid="stSidebarNav"] a:hover,
 [data-testid="stSidebarNav"] a:focus-visible {
-    background: #ffffff27;
-    color: #ffffff;
+    background: #355881;
 }
 [data-testid="stSidebarNav"] a[aria-current="page"] {
     background: #9debd8;
     border-color: #b6f7e6;
-    color: #103b3a;
 }
-[data-testid="stSidebarHeader"] button {
-    color: #e5f5ff;
+[data-testid="stSidebarNav"] a[aria-current="page"],
+[data-testid="stSidebarNav"] a[aria-current="page"] :is(span, p) {
+    color: #103b3a !important;
+    font-weight: 700;
 }
 </style>
 """
@@ -62,17 +61,10 @@ SIDEBAR_STYLE = """
 INSIGHTS_STYLE = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(
-        145deg,
-        color-mix(in srgb, var(--background-color, #ffffff) 89%, #a78bfa),
-        color-mix(in srgb, var(--background-color, #ffffff) 97%, #a78bfa) 65%
-    );
-}
-[data-testid="stMain"] h1 {
-    color: color-mix(in srgb, var(--text-color, #241445) 72%, #7c3aed);
+    background-image: linear-gradient(145deg, #a78bfa24, transparent 70%);
 }
 [data-testid="stMain"] [role="tablist"] {
-    background: color-mix(in srgb, var(--background-color, #ffffff) 88%, #a78bfa);
+    background: #a78bfa20;
     border-radius: 12px;
     padding-inline: .5rem;
 }
@@ -82,32 +74,13 @@ INSIGHTS_STYLE = """
 STYLE = """
 <style>
 [data-testid="stAppViewContainer"]:has(.st-key-job_search_page) {
-    background: linear-gradient(
-        155deg,
-        color-mix(in srgb, var(--background-color, #ffffff) 91%, #3b82f6),
-        color-mix(in srgb, var(--background-color, #ffffff) 94%, #14b8a6) 55%,
-        color-mix(in srgb, var(--background-color, #ffffff) 93%, #8b5cf6)
-    );
+    background-image: linear-gradient(155deg, #3b82f61a, #14b8a60c 55%, #8b5cf619);
 }
 .st-key-job_search_page [data-testid="stForm"] {
-    background: color-mix(in srgb, var(--background-color, #ffffff) 90%, #60a5fa);
+    background: #60a5fa1a;
     border: 1px solid #3b82f675;
     border-left: 4px solid #3b82f6;
     border-radius: 16px;
-}
-.st-key-job_query [data-testid="stWidgetLabel"] p {
-    color: color-mix(in srgb, var(--text-color, #173b83) 75%, #3b82f6);
-    font-weight: 700;
-}
-.st-key-job_query [data-baseweb="input"] {
-    background: color-mix(in srgb, var(--background-color, #ffffff) 86%, #93c5fd);
-    border: 1px solid #3b82f685;
-    border-radius: 10px;
-}
-.st-key-job_query input {
-    background: transparent;
-    color: var(--text-color, #14244a);
-    caret-color: var(--text-color, #14244a);
 }
 .st-key-job_search_page [data-testid="stFormSubmitButton"] button {
     background: #0e635f;
@@ -120,17 +93,35 @@ STYLE = """
     color: #ffffff;
 }
 .st-key-job_search_page .st-key-job_results {
-    background: color-mix(in srgb, var(--background-color, #ffffff) 90%, #2dd4bf);
+    background: #2dd4bf1a;
     border: 1px solid #14b8a675;
     border-left: 4px solid #0d9488;
     border-radius: 16px;
     padding: 1rem;
 }
 .st-key-job_search_page [data-testid="stExpander"] details {
-    background: color-mix(in srgb, var(--background-color, #ffffff) 90%, #a78bfa);
+    background: #a78bfa1a;
     border: 1px solid #8b5cf675;
     border-left: 4px solid #8b5cf6;
     border-radius: 14px;
+}
+
+.st-key-job_query [data-testid="stWidgetLabel"] p {
+    background: #dbeafe;
+    border-radius: 6px;
+    color: #1e3a8a !important;
+    font-weight: 700;
+    padding: .15rem .45rem;
+}
+.st-key-job_query [data-baseweb="input"],
+.st-key-job_query input {
+    background: #eff6ff;
+    color: #14244a !important;
+    caret-color: #14244a;
+}
+.st-key-job_query input::placeholder {
+    color: #4b5e78 !important;
+    opacity: 1;
 }
 .p8-hero, .p8-credit { font-family: "DM Sans", system-ui, sans-serif; }
 .p8-hero {
@@ -165,9 +156,14 @@ STYLE = """
     margin: 0;
 }
 .p8-credit {
-    border-top: 1px solid #74878155;
-    padding: 1rem 0;
+    background: #e0f2fe;
+    border: 1px solid #93c5fd;
+    border-radius: 10px;
+    padding: .8rem 1rem;
     font-size: .9rem;
+}
+.p8-credit, .p8-credit strong {
+    color: #14244a !important;
 }
 </style>
 """
@@ -261,11 +257,7 @@ def render_job_search():
         with st.form("job_search"):
             query_col, limit_col = st.columns([3, 1])
             with query_col:
-                query = st.text_input(
-                    "Job title or skills",
-                    placeholder="e.g. Python SQL data analyst",
-                    key="job_query",
-                )
+                query = st.text_input("Job title or skills", placeholder="e.g. Python SQL data analyst", key="job_query")
             with limit_col:
                 top_k = st.slider("Maximum results", 1, 20, 5)
             submitted = st.form_submit_button("Find jobs", type="primary")
@@ -319,9 +311,8 @@ def render_job_search():
                 "and an evaluation of the weekly demand forecast."
             )
 
-        st.markdown(
-            '<div class="p8-credit">Created by <strong>Megha Parasher</strong></div>',
-            unsafe_allow_html=True,
+        st.html(
+            '<div class="p8-credit">Created by <strong>Megha Parasher</strong></div>'
         )
 
 
