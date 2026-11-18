@@ -75,10 +75,45 @@ if submitted:
             positions = np.argsort(-scores, kind="stable")[:top_k]
 
             results = catalog.iloc[positions][
-                ["title", "country", "published_date"]
+                ["title", "country", "published_date", "link",
+                 "is_hourly", "hourly_low", "hourly_high", "budget"]
             ].copy()
+
+            def advertised_pay(row):
+                payment_type = str(row["is_hourly"]).strip().lower()
+                low = row["hourly_low"]
+                high = row["hourly_high"]
+                budget = row["budget"]
+
+                if payment_type == "true":
+                    if pd.notna(low) and pd.notna(high) and 0 < low <= high:
+                        return f"{low:,.2f}–{high:,.2f} / hr"
+                elif payment_type == "false":
+                    if pd.notna(budget) and budget > 0:
+                        return f"{budget:,.2f} fixed"
+
+                return "Not listed"
+
+            results["advertised_pay"] = results.apply(advertised_pay, axis=1)
             results["similarity"] = scores[positions].round(4)
-            st.dataframe(results, hide_index=True)
+
+            st.dataframe(
+                results[
+                    ["title", "country", "published_date",
+                     "advertised_pay", "similarity", "link"]
+                ],
+                hide_index=True,
+                column_config={
+                    "advertised_pay": "Advertised pay",
+                    "link": st.column_config.LinkColumn(
+                        "Upwork listing", display_text="Open on Upwork"
+                    ),
+                },
+            )
+            st.caption(
+                "Pay is shown in the dataset’s original units. "
+                "Historical Upwork listings may have expired."
+            )
             logger.info("MiniLM search returned %d results", len(results))
         except Exception:
             logger.exception("MiniLM search failed")
